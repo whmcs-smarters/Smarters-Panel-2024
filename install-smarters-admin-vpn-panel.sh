@@ -464,6 +464,12 @@ curl -s 'https://packages.networkradius.com/pgp/packages%40networkradius.com' | 
     # start freeradius on boot
     sudo systemctl enable --now freeradius
 }
+#### Function to auto-start pm2  on boot 
+function start_pm2_on_boot {
+echo "Starting PM2 on Boot"
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER --hp /home/$USER
+check_last_command_execution "PM2 Started on Boot Successfully" "PM2 Start on Boot Failed"
+}
 ########### FUNCTION to Install Smarters Panel ###########
 function install_smarters_panel {
 check_ubuntu_20_04
@@ -512,6 +518,7 @@ pm2 kill
 NODE_ENV=production pm2 start app.js
 NODE_ENV=production pm2 start checkstatus.js
 check_last_command_execution "Smarters Panel Installed Successfully" "Smarters Panel Installation Failed.Exit the script"
+start_pm2_on_boot
 print_gui_pattern $app_url
 rm -rf /root/install-main-panel.sh 2> /dev/null # remove files
 }
