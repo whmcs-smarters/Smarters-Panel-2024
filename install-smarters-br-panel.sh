@@ -45,8 +45,8 @@ echo -e "\e[32m$1\e[0m"
 else
 echo -e "\e[31m$2\e[0m"
 # remove files
-rm -rf /root/install-released-vpn-panel*.sh 2> /dev/null # remove files
-echo "Check Logs for more details: install-released-vpn-panel-$domain_name.log"
+rm -rf /root/install-smarters-br-panel*.sh 2> /dev/null # remove files
+echo "Check Logs for more details: install-smarters-br-panel-$domain_name.log"
 exit 1
 fi
 }
@@ -275,7 +275,6 @@ document_root=$2
 add_ssh_known_hosts # call function to add bitbucket.org to known hosts
 cd $document_root
 apt install git -y # install git
-#git clone -b $git_branch git@bitbucket.org:techsmarters8333/smarters-vpn-panel-released.git .
 git clone -b $git_branch https://x-token-auth:$git_access_token@bitbucket.org/techsmarters8333/smarters-br-panel-released.git .
 check_last_command_execution "Smarters SBR Panel Cloned Successfully" "SBR Panel Cloning Failed"
 }
@@ -335,7 +334,7 @@ echo "Installing Composer"
 curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
 HASH=`curl -sS https://composer.github.io/installer.sig`
 php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=2.1.8 --quiet --no-interaction 
+sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=2.7.7 --quiet --no-interaction 
 check_last_command_execution "Composer Installed Successfully" "Composer Installation Failed.Exit the script"
 }
 ### Function to Give Permissions to Laravel Directories ###
@@ -451,7 +450,7 @@ check_last_command_execution "Artisan Optimize Successfully" "Artisan Optimize F
 final_check # call function to check if everything is working fine
 give_permissions_to_laravel_directories $document_root
 print_gui_pattern $app_url
-rm -rf /root/install-smarters-sbr-panel*.sh 2> /dev/null # remove files
+rm -rf /root/install-smarters-br-panel*.sh 2> /dev/null # remove files
 }
 # Function to update the SBR Panel on Commit
 function update_smarters_panel {
@@ -499,8 +498,8 @@ fi
 echo "###### Options Provided by User ######"
 set_check_valid_domain_name $domain_name 
 # Start logging the script
-echo -e "\033[33mLogging the script into install-released-vpn-panel-$domain_name.log\e[0m"
-exec > >(tee -i install-released-vpn-panel-$domain_name.log)
+echo -e "\033[33mLogging the script into install-smarters-br-panel-$domain_name.log\e[0m"
+exec > >(tee -i install-smarters-br-panel-$domain_name.log)
 exec 2>&1
 # if git_branch is empty then set it to master
 if [ -z "$git_branch" ]
