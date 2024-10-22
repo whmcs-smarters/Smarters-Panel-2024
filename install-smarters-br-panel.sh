@@ -413,7 +413,7 @@ document_root=$2
 git_branch=$3
 mysql_root_pass=$4
 isSubdomain=$5
-desired_version="8.1" # desired version of PHP
+desired_version="8.3" # desired version of PHP
 apt update -yq
 # install curl and wget
 apt install curl wget -yq
