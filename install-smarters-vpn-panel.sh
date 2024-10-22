@@ -235,6 +235,17 @@ sudo echo "extension=ixed.8.1.lin" >> /etc/php/8.1/cli/php.ini
 sudo systemctl restart apache2
 check_last_command_execution "SourceGuardian Installed Successfully" "SourceGuardian Installation Failed"
 }
+function install_sourceguardian_8_3 {
+echo "Installing SourceGuardian"
+wget https://github.com/whmcs-smarters/Smarters-Panel-2024/raw/refs/heads/main/ixed.8.3.lin
+#sudo mkdir -p /usr/local/lib/php/extensions/no-debug-non-zts-20190902/
+#sudo cp ixed.8.3.lin /usr/local/lib/php/extensions/no-debug-non-zts-20190902/
+sudo cp ixed.8.3.lin /usr/lib/php/20230831
+sudo echo "extension=ixed.8.3.lin" >> /etc/php/8.3/apache2/php.ini
+sudo echo "extension=ixed.8.3.lin" >> /etc/php/8.3/cli/php.ini
+sudo systemctl restart apache2
+check_last_command_execution "SourceGuardian Installed Successfully" "SourceGuardian Installation Failed"
+}
 # function to remove apache completely
 function remove_apache_completely {
 echo "Removing Apache completely with configuration files"
@@ -422,7 +433,8 @@ install_apache
 install_mysql_with_defined_password $mysql_root_pass
 create_database_and_database_user $mysql_root_pass
 install_php_with_desired_version $desired_version
-install_sourceguardian_8_1
+#install_sourceguardian_8_1
+install_sourceguardian_8_3
 create_virtual_host $domain_name $document_root
 if [ "$sslInstallation" = true ] ; then
 installSSL $domain_name $isSubdomain
