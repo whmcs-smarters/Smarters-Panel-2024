@@ -278,6 +278,30 @@ document_root=$1
 rm -rf $document_root/*  2> /dev/null # remove files
 rm -rf $document_root/.* 2> /dev/null # remove hidden files
 }
+## function to install supervisor
+function install_supervisor {
+document_root=$1
+echo "Installing Supervisor"
+sudo apt-get install supervisor -y
+## Create a new config file:
+sudo truncate -s 0 /etc/supervisor/conf.d/laravel-worker.conf
+cat >> /etc/supervisor/conf.d/laravel-worker.conf <<EOF
+[program:laravel-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php $document_root/artisan queue:work --timeout=0
+autostart=true
+autorestart=true
+user=root
+numprocs=1
+redirect_stderr=true
+stdout_logfile=$document_root/storage/logs/worker.log
+EOF
+## start supervisor
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start laravel-worker:*
+check_last_command_execution "Supervisor Installed Successfully" "Supervisor Installation Failed"
+}
 
 ## Function to clone from git 
 function clone_from_git {
@@ -439,6 +463,7 @@ if [ "$sslInstallation" = true ] ; then
 installSSL $domain_name $isSubdomain
 fi 
 clean_installation_directories $document_root # call function to clean installation directories
+install_supervisor $document_root # call function to install supervisor
 clone_from_git $git_branch $document_root # call function to clone from git
 mysql -u $database_user -p$database_user_password -e "show databases;" 2> /dev/null
 check_last_command_execution " MySQL Connection is Fine. Green Flag to create .env file" "MySQL Connection Failed.Exit the script"
