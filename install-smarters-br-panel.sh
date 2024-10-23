@@ -294,7 +294,7 @@ autorestart=true
 user=root
 numprocs=1
 redirect_stderr=true
-stdout_logfile=$document_root/storage/logs/worker.log
+stdout_logfile=/var/log/laravel-worker.log
 EOF
 ## start supervisor
 sudo supervisorctl reread
